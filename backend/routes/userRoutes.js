@@ -143,14 +143,8 @@ router.get("/profile", authenticateUser, (req, res) => {
   const { firstname, lastname, email } = req.user;
   res.status(200).json({
     firstname,
+    lastname,
     email,
-  });
-});
-
-router.get("/workers", authenticateUser, (req, res) => {
-  fs.readFile(filePath, "utf-8", (err, data) => {
-    if (err) return res.status(500).json({ message: "Error reading file" });
-    res.json(JSON.parse(data));
   });
 });
 
