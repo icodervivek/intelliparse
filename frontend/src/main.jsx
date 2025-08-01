@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { WobbleCardDemo } from "./WobbleCardDemo.jsx";
-import Signup from "./SignUp.jsx";
+import Signup from "./Signup.jsx";
 import Signin from "./Signin.jsx";
 import Formpage from "./Formpage.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
