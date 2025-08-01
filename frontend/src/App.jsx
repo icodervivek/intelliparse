@@ -10,11 +10,6 @@ const App = () => {
     <>
       <SeraUIHero />
       <WobbleCardDemo />
-      {/* <div className='flex justify-center'>
-        <MeteorsDemo />
-
-        </div> */}
-  
       <Footer />
     </>
   );

@@ -79,7 +79,7 @@ const Navbar = () => {
               ) : (
                 <>
                   <HashLink
-                    to="#about"
+                    to="/about"
                     className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white transition-colors"
                   >
                     About
@@ -132,7 +132,7 @@ const Navbar = () => {
               ) : (
                 <>
                   <HashLink
-                    to="#about"
+                    to="/about"
                     className="block text-base font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
                   >
                     About

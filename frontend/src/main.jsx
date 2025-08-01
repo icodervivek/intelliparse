@@ -8,6 +8,7 @@ import Signup from "./Signup.jsx";
 import Signin from "./Signin.jsx";
 import Formpage from "./Formpage.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import About from "./About.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -15,6 +16,7 @@ createRoot(document.getElementById("root")).render(
       <Route path="/" element={<App />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/signin" element={<Signin />} />
+      <Route path="/about" element={<About />} />
       <Route
         path="/form"
         element={

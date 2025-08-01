@@ -88,7 +88,7 @@ const SeraUIHero = () => {
                     }}
                   />
                   <Link
-                    to="/signin"
+                    to="/signup"
                     className="relative z-10 inline-flex items-center justify-center w-full h-full px-8 py-3 text-gray-900 dark:text-white bg-white dark:bg-slate-800 rounded-full group-hover:bg-gray-100 dark:group-hover:bg-gray-800 transition-colors duration-300 cursor-pointer"
                   >
                     Get Started Free
