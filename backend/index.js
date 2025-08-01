@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 const PORT = process.env.PORT;
 app.use(cors({
-  origin: `{process.env.FRONTEND_API}`, 
+  origin: `${process.env.FRONTEND_API}`, 
   credentials: true, 
 }));
 
