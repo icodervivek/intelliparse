@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "cd ../frontend && npm install && npm run build",
     "dev": "nodemon index.js"
   },
   "keywords": [],
