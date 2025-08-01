@@ -15,9 +15,9 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 app.use(cors({
-  origin: "http://localhost:5173", 
+  origin: `{process.env.FRONTEND_API}`, 
   credentials: true, 
 }));
 
@@ -117,5 +117,5 @@ app.use("/api", router);
 
 
 app.listen(PORT, () => {
-  console.log(`✅ Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running at ${PORT}`);
 });

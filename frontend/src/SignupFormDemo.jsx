@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { isAuthenticated } from "./auth";
 
 export function SignupFormDemo() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     firstname: "",
@@ -33,7 +33,7 @@ export function SignupFormDemo() {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/signup", // update if your backend URL differs
+        `${import.meta.env.VITE_BACKEND_API}/api/signup`,
         formData
       );
       toast.success(res.data.message || "Signup Successful", {
@@ -53,7 +53,7 @@ export function SignupFormDemo() {
     }
   };
 
-   useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated()) {
       navigate("/form"); // or your desired protected route
     }
@@ -83,7 +83,9 @@ export function SignupFormDemo() {
             />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label className="overflow-y-hidden" htmlFor="lastname">Last name</Label>
+            <Label className="overflow-y-hidden" htmlFor="lastname">
+              Last name
+            </Label>
             <Input
               id="lastname"
               placeholder="Durden"
@@ -118,7 +120,7 @@ export function SignupFormDemo() {
             onChange={handleChange}
           />
         </LabelInputContainer>
-         <button
+        <button
           className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer"
           type="submit"
         >
@@ -128,7 +130,7 @@ export function SignupFormDemo() {
         <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
         <h2 className="text-center">Already have an account?</h2>
         <Link to="/signin" className="cursor-pointer">
-           <button className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] my-4 cursor-pointer">
+          <button className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] my-4 cursor-pointer">
             Sign in &larr;
             <BottomGradient />
           </button>

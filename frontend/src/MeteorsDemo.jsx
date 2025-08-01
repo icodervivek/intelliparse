@@ -12,7 +12,9 @@ export function MeteorsDemo() {
     // Fetch profile on mount
     const fetchProfile = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/profile"); // Update port if needed
+        const res = await axios.get(
+          `${import.meta.env.VITE_BACKEND_API}/api/profile`
+        ); // Update port if needed
         setProfile(res.data);
       } catch (err) {
         setError("You are not logged in");
@@ -56,7 +58,9 @@ export function MeteorsDemo() {
 
           {profile ? (
             <div className="text-white">
-              <p className="text-sm text-green-400">Welcome, {profile.firstname} {profile.lastname}</p>
+              <p className="text-sm text-green-400">
+                Welcome, {profile.firstname} {profile.lastname}
+              </p>
               <p className="text-sm text-gray-300">Email: {profile.email}</p>
             </div>
           ) : (

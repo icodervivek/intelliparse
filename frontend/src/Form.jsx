@@ -27,7 +27,7 @@ const Form = () => {
       setUploading(true);
       setMessage("");
       const response = await axios.post(
-        "http://localhost:3000/upload",
+        `${import.meta.env.VITE_BACKEND_API}/upload`,
         formData,
         {
           headers: {
