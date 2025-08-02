@@ -32,7 +32,6 @@ export function SigninFormDemo() {
 
     try {
       const res = await axios.post(
-        // "http://localhost:3000/api/signin", // update with your actual backend endpoint
         `${import.meta.env.VITE_BACKEND_API}/api/signin`,
         formData,
         {

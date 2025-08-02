@@ -116,6 +116,7 @@ router.post("/signin", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "None",
+      maxAge: 24 * 60 * 60 * 1000,
     });
 
     // Send success response
