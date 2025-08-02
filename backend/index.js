@@ -16,20 +16,11 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 const PORT = process.env.PORT;
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://intelliparse.netlify.app",
-];
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
+  origin: `${process.env.FRONTEND_API}`, 
+  credentials: true, 
 }));
+
 // Multer setup: use memory storage to access file as a buffer
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
