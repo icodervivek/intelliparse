@@ -40,6 +40,9 @@ export function SigninFormDemo() {
         }
       );
 
+      console.log("Backend API URL:", import.meta.env.VITE_BACKEND_API);
+
+
       const token = res.data.token;
       localStorage.setItem("token", token); // ✅ Store the token
 
