@@ -163,7 +163,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={icon.name}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 overflow-y-hidden"
               href={icon.href}
             >
               {icon.svg}
