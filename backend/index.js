@@ -16,10 +16,12 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 const PORT = process.env.PORT;
-app.use(cors({
-  origin: `${process.env.FRONTEND_API}`, 
-  credentials: true, 
-}));
+app.use(
+  cors({
+    origin: `${process.env.FRONTEND_API}`,
+    credentials: true,
+  })
+);
 
 // Multer setup: use memory storage to access file as a buffer
 const storage = multer.memoryStorage();
@@ -69,6 +71,12 @@ Text:
 const summaryChain = new LLMChain({ llm: model, prompt: summaryPrompt });
 const faqsChain = new LLMChain({ llm: model, prompt: faqsPrompt });
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "Backend is running",
+  });
+});
+
 // === Upload Endpoint ===
 app.post("/upload", upload.single("pdf"), async (req, res) => {
   try {
@@ -114,7 +122,6 @@ app.post("/upload", upload.single("pdf"), async (req, res) => {
 });
 
 app.use("/api", router);
-
 
 app.listen(PORT, () => {
   console.log(`✅ Server running at ${PORT}`);
