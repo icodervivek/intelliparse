@@ -21,6 +21,8 @@ Intelliparse is a full-stack web application built with the **MERN** stack and p
 ### Frontend
 - [React.js](https://reactjs.org/)
 - [TailwindCSS](https://tailwindcss.com/)
+- [Aceternity UI](https://ui.aceternity.com/)
+- [Sera UI](https://seraui.seraprogrammer.com/)
 - [Axios](https://axios-http.com/)
 - [React Router](https://reactrouter.com/)
 
@@ -49,8 +51,6 @@ Intelliparse is a full-stack web application built with the **MERN** stack and p
 
 ---
 
-
----
 
 ## 📦 Installation
 
@@ -86,11 +86,80 @@ npm run dev
 cd ../frontend
 npm install
 ```
+Create a .env file:
+
+```bash
+VITE_BACKEND_API=your_backend_api
+```
+
 Start the frontend:
 
 ```bash
 npm run dev
 ```
+
+---
+
+## 🐳 Docker Deployment (with Compose)
+
+### ⚙️ Prerequisites
+
+- Docker
+- Docker Compose
+- MongoDB URI (local or Atlas)
+
+### 📁 Directory Structure
+
+```
+intelliparse/
+├── backend/
+│   ├── Dockerfile
+│   └── .env           # ✅ Needed to create manually
+├── frontend/
+│   ├── Dockerfile
+│   └── .env           # ✅ Needed to create manually
+├── docker-compose.yml
+```
+
+### 🧾 Step 1: Create .env Files
+
+backend/.env
+
+```
+PORT=3000
+MONGO_URI=your_mongodb_connection_string
+SECRET=your_jwt_secret
+GOOGLE_API_KEY=your_google_gemini_api_key
+```
+
+frontend/.env
+```
+VITE_BACKEND_API=http://localhost:3000  # or add the backend link
+```
+
+__Note 📝__   `.env` files are excluded from the build (via .dockerignore). So they must be created on the host system before running Compose.
+
+## 🛠 Step 2: Run Docker Compose
+
+From the root directory:
+
+```
+docker compose up --build -d
+```
+
+This will:
+
+- 🐳 Build and start both containers
+- 🔁 Mount .env into the containers at runtime
+- 🔗 Set up an internal Docker network for service-to-service communication
+
+
+### 🛑 Stopping the App
+
+```
+docker compose down
+```
+
 
 ### 4. 📸 Demo
 ![alt text](image.png)
