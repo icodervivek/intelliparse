@@ -51,7 +51,6 @@ Intelliparse is a full-stack web application built with the **MERN** stack and p
 
 ---
 
-
 ## 📦 Installation
 
 ### 1. Clone the Repo
@@ -159,9 +158,9 @@ This will:
 ```
 docker compose down
 ```
+---
 
-
-### 4. 📸 Demo
+### 📸 Demo
 ![alt text](image.png)
 ![alt text](image-1.png)
 ![alt text](image-2.png)
