@@ -60,12 +60,12 @@ export function SignupFormDemo() {
   }, []);
 
   return (
-    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-white p-8  md:rounded-2xl md:p-8 dark:bg-black mt-5">
+    <div className="shadow-input mx-auto w-full max-w-md rounded-none p-8 md:rounded-2xl md:p-8 bg-black mt-5">
       <ToastContainer />
-      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
+      <h2 className="text-xl font-bold text-neutral-200">
         Welcome to Intelliparse
       </h2>
-      <p className="mt-2 max-w-sm text-sm text-neutral-600 dark:text-neutral-300">
+      <p className="mt-2 max-w-sm text-sm text-neutral-300">
         Create an account to login to our portal
       </p>
       <form className="my-8" onSubmit={handleSubmit}>
@@ -121,16 +121,16 @@ export function SignupFormDemo() {
           />
         </LabelInputContainer>
         <button
-          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer"
+          className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden font-medium text-white bg-zinc-800 from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] cursor-pointer"
           type="submit"
         >
           Sign up &rarr;
           <BottomGradient />
         </button>
-        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+        <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-700" />
         <h2 className="text-center">Already have an account?</h2>
         <Link to="/signin" className="cursor-pointer">
-          <button className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] my-4 cursor-pointer">
+          <button className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br overflow-y-hidden font-medium text-white bg-zinc-800 from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset] my-4 cursor-pointer">
             Sign in &larr;
             <BottomGradient />
           </button>

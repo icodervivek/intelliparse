@@ -136,7 +136,7 @@ function Footer() {
     <footer className="py-10 px-4 sm:px-6 lg:px-8 font-inter relative overflow-hidden ">
       <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10">
         <div className="mb-6 flex items-center justify-center">
-          <span className="text-gray-900 dark:text-white text-3xl font-extrabold tracking-wide overflow-y-hidden">
+          <span className="text-white text-3xl font-extrabold tracking-wide overflow-y-hidden">
             Intelliparse
           </span>
         </div>
@@ -147,7 +147,7 @@ function Footer() {
               <li key={link.name}>
                 <a
                   href={link.href}
-                  className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all duration-300 relative after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-gray-900 dark:after:bg-white after:transition-all after:duration-300 hover:after:w-full"
+                  className="text-gray-400 hover:text-white transition-all duration-300 relative after:absolute after:left-0 after:bottom-0 after:h-0.5 after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full"
                 >
                   {link.name}
                 </a>
@@ -163,7 +163,7 @@ function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={icon.name}
-              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300 overflow-y-hidden"
+              className="text-gray-400 hover:text-white transition-colors duration-300 overflow-y-hidden"
               href={icon.href}
             >
               {icon.svg}
