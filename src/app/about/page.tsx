@@ -19,13 +19,15 @@ export default function About() {
         className="max-w-4xl mx-auto text-center"
       >
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-6">
-          About <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Intelliparse</span>
+          About{" "}
+          <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+            Intelliparse
+          </span>
         </h2>
         <p className="text-gray-300 sm:text-lg mb-8 leading-relaxed">
-          Intelliparse is an AI-powered PDF analyzer designed to make your document
-          experience faster, smarter, and more efficient. Whether you are reviewing
-          reports, research papers, or manuals, Intelliparse instantly generates
-          summaries and key FAQs, so you spend less time reading and more time understanding.
+          Upload PDFs, text, or URLs and let AI analyze them. With
+          Intelliparse’s RAG system, chat directly with your documents to get
+          instant summaries, insights, and answers — all in one place.
         </p>
 
         <motion.div
@@ -36,21 +38,31 @@ export default function About() {
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10"
         >
           <div className="bg-[#1a1a1a] p-6 rounded-2xl shadow-lg border border-gray-800">
-            <h3 className="text-xl font-semibold mb-2 text-blue-400">Fast Summaries</h3>
+            <h3 className="text-xl font-semibold mb-2 text-blue-400">
+              Fast Summaries
+            </h3>
             <p className="text-gray-300 text-left">
-              Get concise summaries of any PDF instantly, saving time and effort while ensuring you capture the essence of the document.
+              Get concise summaries of any PDF instantly, saving time and effort
+              while ensuring you capture the essence of the document.
             </p>
           </div>
           <div className="bg-[#1a1a1a] p-6 rounded-2xl shadow-lg border border-gray-800">
-            <h3 className="text-xl font-semibold mb-2 text-blue-400">Smart FAQs</h3>
+            <h3 className="text-xl font-semibold mb-2 text-blue-400">
+              Smart FAQs
+            </h3>
             <p className="text-gray-300 text-left">
-              Automatically generate frequently asked questions and answers based on the content of your PDFs for better understanding and quick reference.
+              Automatically generate frequently asked questions and answers
+              based on the content of your PDFs for better understanding and
+              quick reference.
             </p>
           </div>
           <div className="bg-[#1a1a1a] p-6 rounded-2xl shadow-lg border border-gray-800">
-            <h3 className="text-xl font-semibold mb-2 text-blue-400">Interactive Experience</h3>
+            <h3 className="text-xl font-semibold mb-2 text-blue-400">
+              Interactive Experience
+            </h3>
             <p className="text-gray-300 text-left">
-              Engage with your documents using AI chat and interactive tools to find answers, clarify points, and explore content dynamically.
+              Engage with your documents using AI chat and interactive tools to
+              find answers, clarify points, and explore content dynamically.
             </p>
           </div>
         </motion.div>

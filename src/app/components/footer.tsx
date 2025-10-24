@@ -15,7 +15,7 @@ const Footer = () => {
           <h2 className="text-2xl font-bold">
             Intelliparse
           </h2>
-          <p className="text-sm text-gray-400">Smart PDF Analyzer</p>
+          <p className="text-sm text-gray-400">Smart Document Analyzer</p>
         </div>
 
         {/* Links */}

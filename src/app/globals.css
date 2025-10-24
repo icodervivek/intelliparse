@@ -13,25 +13,56 @@ body::selection {
 
 /* Works in Chrome, Edge, Safari */
 ::-webkit-scrollbar {
-  width: 8px;              /* scrollbar width */
+  width: 8px; /* scrollbar width */
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e1e1e;     /* track background */
+  background: #1e1e1e; /* track background */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #555;        /* thumb color */
-  border-radius: 4px;      /* rounded corners */
+  background: #555; /* thumb color */
+  border-radius: 4px; /* rounded corners */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #888;        /* hover color */
+  background: #888; /* hover color */
 }
 
 /* Works in Firefox */
 * {
-  scrollbar-width: thin;          /* thin / auto / none */
-  scrollbar-color: #555 #1e1e1e;  /* thumb color, track color */
+  scrollbar-width: thin; /* thin / auto / none */
+  scrollbar-color: #555 #1e1e1e; /* thumb color, track color */
 }
 
+pre {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap; /* allows wrapping instead of huge horizontal scroll */
+  word-wrap: break-word;
+  -webkit-overflow-scrolling: touch; /* smooth scroll on mobile */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Smooth scrollbar for mobile & desktop */
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+pre::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+code {
+  font-family: "Fira Code", monospace;
+  font-size: clamp(0.8rem, 2vw, 0.9rem); /* adaptive font size */
+  color: #e4e4e7;
+  line-height: 1.5;
+  word-break: break-word;
+}

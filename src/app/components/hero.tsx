@@ -3,8 +3,21 @@
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+
 
 export default function Hero() {
+  const { isSignedIn } = useAuth();
+  const router = useRouter();
+
+  const handleRagClick = () => {
+    if (!isSignedIn) {
+      router.push("/sign-in");
+    } else {
+      router.push("/rag");
+    }
+  };
   return (
     <section className="relative w-full text-white overflow-hidden bg-gradient-to-b from-blue-950 via-[#201f1f] to-[#201f1f] group select-none tracking-widest">
       {/* Gradient Glows */}
@@ -47,7 +60,7 @@ export default function Hero() {
           transition={{ duration: 0.6 }}
           className="inline-flex items-center gap-2 px-3 sm:px-4 py-1 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs sm:text-sm mb-6"
         >
-          <span>✨ Get AI-Powered PDF Insights</span>
+          <span>✨ Get AI-Powered Document Insights</span>
           <ArrowRight className="w-4 h-4" />
         </motion.div>
 
@@ -60,7 +73,7 @@ export default function Hero() {
         >
           Intelliparse –{" "}
           <span className="bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
-            Smart PDF Analyzer
+            Smart Document Analyzer
           </span>
         </motion.h1>
 
@@ -71,28 +84,50 @@ export default function Hero() {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="mt-6 text-base sm:text-lg text-gray-300 leading-relaxed px-2"
         >
-          Upload any PDF document and let AI instantly generate a concise
-          summary and a set of frequently asked questions with answers. Perfect
-          for quick reviews, understanding long documents, or extracting key
-          information on the go.
+          Upload PDFs, text, or URLs and let AI analyze them. With
+          Intelliparse’s RAG system, chat directly with your documents to get
+          instant summaries, insights, and answers — all in one place.
         </motion.p>
 
         {/* CTA Button */}
-        <motion.div
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link href="/parse" className="w-64">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5, duration: 0.6 }}
+              className="w-full"
+            >
+              <button
+                className="w-full px-8 py-4 rounded-xl 
+        bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 
+        text-white font-semibold shadow-lg 
+        hover:shadow-blue-700/50 transition cursor-pointer"
+              >
+                Summarise PDF
+              </button>
+            </motion.div>
+          </Link>
+
+          {/* <Link href="/rag" className="w-64"> */}
+            <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-          className="mt-8 sm:mt-10"
+          transition={{ delay: 0.6, duration: 0.6 }}
+          className="w-64"
         >
           <button
-            className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl 
-  bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 
-  text-white font-semibold shadow-lg 
-  hover:shadow-blue-700/50 transition cursor-pointer"
+            onClick={handleRagClick}
+            className="w-full px-8 py-4 rounded-xl 
+              bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-800 
+              text-white font-semibold shadow-lg 
+              hover:shadow-blue-700/50 transition cursor-pointer"
           >
-            <Link href="/parse">Get Started Free</Link>
+            Try Our RAG
           </button>
         </motion.div>
+          {/* </Link> */}
+        </div>
       </div>
     </section>
   );

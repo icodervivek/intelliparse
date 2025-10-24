@@ -54,11 +54,12 @@ export function WobbleCardDemo() {
           containerClassName="col-span-1 min-h-[300px]"
         >
           <h2 className="max-w-80 text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white overflow-y-hidden">
-            PDF Analysis, Supercharged by Gen AI
+            Chat with Your Documents, URLs, and Text Instantly
           </h2>
           <p className="mt-4 max-w-[26rem] text-left text-base/6 text-neutral-200">
-            Leveraging LangChain & Gemini, this tool parses your documents with
-            LLMs to give intelligent outputs — instantly.
+            Upload PDFs, paste text, or provide URLs — Intelliparse’s RAG system
+            lets you interact with your data, generating summaries, insights,
+            and answers in real-time.
           </p>
         </WobbleCard>
       </motion.div>
@@ -77,15 +78,16 @@ export function WobbleCardDemo() {
         >
           <div className="max-w-sm">
             <h2 className="max-w-sm md:max-w-lg text-left text-balance text-base md:text-xl lg:text-3xl font-semibold tracking-[-0.015em] text-white overflow-y-hidden">
-              Don’t Read the Whole PDF — Let AI Do It
+              Unlock Insights from Any Document or URL
             </h2>
             <p className="mt-4 max-w-[26rem] text-left text-base/6 text-neutral-200">
-              Upload any PDF and receive a quick overview with key FAQs. Great
-              for saving time on reports, manuals, or papers.
+              Let AI process PDFs, text, and web pages to provide concise
+              summaries, answer questions, and highlight key points — all
+              instantly.
             </p>
           </div>
           <img
-            src="/ss2.jpg"
+            src="/ss3.png"
             width={500}
             height={500}
             alt="linear demo image"
