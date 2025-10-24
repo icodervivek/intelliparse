@@ -1,13 +1,21 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 const isPublicRoute = createRouteMatcher([
-  '/sign-in(.*)',
-  '/sign-up(.*)'
+  '/sign-in$',
+  '/sign-in/(.*)',        // allow /sign-in/sso-callback
+  '/sign-up$',
+  '/sign-up/(.*)',
+  '/sso-callback$',
+  '/sso-callback/(.*)',
 ])
 
 const isProtectedRoute = createRouteMatcher(['/rag(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
+  
+    if (isPublicRoute(req)) return;
+
+
   // Protect /rag routes - redirect to sign-in if not authenticated
   if (isProtectedRoute(req)) {
     await auth.protect()
