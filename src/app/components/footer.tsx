@@ -21,7 +21,7 @@ const Footer = () => {
         {/* Links */}
         <div className="flex space-x-6 text-gray-400 text-lg">
           <a
-            href="https://www.github.com/icodervivek"
+            href="https://www.github.com/icodervivek/intelliparse"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-600 transition-colors duration-300"
