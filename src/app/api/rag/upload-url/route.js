@@ -1,18 +1,127 @@
 // /app/api/rag/upload-url/route.ts
 export const runtime = "nodejs";
+export const maxDuration = 300;
 
-import "dotenv/config";
 import { QdrantVectorStore } from "@langchain/qdrant";
 import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
-import { RecursiveUrlLoader } from "@langchain/community/document_loaders/web/recursive_url";
-import { compile } from "html-to-text";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { Document } from "langchain/document";
 
-const compiledConvert = compile({ wordwrap: 130 });
+// Simple HTML to text converter
+function htmlToText(html) {
+  return html
+    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+    .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Extract links from HTML
+function extractLinks(html, baseUrl) {
+  const links = new Set();
+  const linkRegex = /<a[^>]+href=["']([^"']+)["']/gi;
+  let match;
+
+  while ((match = linkRegex.exec(html)) !== null) {
+    try {
+      const url = new URL(match[1], baseUrl);
+      // Only internal links, no anchors, no files
+      if (url.hostname === new URL(baseUrl).hostname && 
+          !url.hash && 
+          !url.pathname.match(/\.(pdf|jpg|png|gif|zip|exe|mp4|mp3)$/i)) {
+        links.add(url.href);
+      }
+    } catch (e) {
+      // Invalid URL, skip
+    }
+  }
+
+  return Array.from(links);
+}
+
+// Crawl website recursively with timeout
+async function crawlWebsite(startUrl, maxDepth = 2, maxPages = 30, timeoutMs = 240000) {
+  const visited = new Set();
+  const queue = [{ url: startUrl, depth: 0 }];
+  const documents = [];
+  const startTime = Date.now();
+
+  console.log(`Starting crawl from ${startUrl} (maxDepth: ${maxDepth}, maxPages: ${maxPages})`);
+
+  while (queue.length > 0 && documents.length < maxPages) {
+    // Check timeout (leave 60s buffer for processing)
+    if (Date.now() - startTime > timeoutMs) {
+      console.log(`⚠️ Timeout reached. Stopping crawl with ${documents.length} pages.`);
+      break;
+    }
+    const { url, depth } = queue.shift();
+
+    // Skip if already visited or max depth reached
+    if (visited.has(url) || depth > maxDepth) {
+      continue;
+    }
+
+    visited.add(url);
+
+    try {
+      console.log(`[${documents.length + 1}] Crawling: ${url} (depth: ${depth})`);
+
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; Bot/1.0)',
+        },
+        signal: AbortSignal.timeout(5000), // 5s timeout per page
+      });
+
+      if (!response.ok) {
+        console.log(`  ✗ HTTP ${response.status}`);
+        continue;
+      }
+
+      const html = await response.text();
+      const text = htmlToText(html);
+
+      // Only add if there's meaningful content
+      if (text && text.length > 100) {
+        documents.push(
+          new Document({
+            pageContent: text,
+            metadata: { 
+              source: url,
+              depth: depth,
+            },
+          })
+        );
+        console.log(`  ✓ Added (${text.length} chars)`);
+      }
+
+      // Extract and queue new links if not at max depth
+      if (depth < maxDepth && documents.length < maxPages) {
+        const links = extractLinks(html, url);
+        console.log(`  Found ${links.length} links`);
+        
+        for (const link of links) {
+          if (!visited.has(link)) {
+            queue.push({ url: link, depth: depth + 1 });
+          }
+        }
+      }
+
+      // Faster crawling - remove delay
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+    } catch (error) {
+      console.log(`  ✗ Error: ${error.message}`);
+    }
+  }
+
+  console.log(`Crawl complete: ${documents.length} pages indexed`);
+  return documents;
+}
 
 export async function POST(req) {
   try {
-    // Get formData and type guard
     const data = await req.formData();
     const urlValue = data.get("url");
 
@@ -40,28 +149,28 @@ export async function POST(req) {
       );
     }
 
-    console.log("Crawling URL:", validUrl.toString());
+    console.log("Starting website crawl:", validUrl.toString());
 
-    // Recursive loader to fetch main URL + internal pages
-    const loader = new RecursiveUrlLoader(validUrl.toString(), {
-      extractor: compiledConvert,
-      maxDepth: 5, // Adjust depth if needed
-    });
-
-    const docs = await loader.load();
-    console.log(`Fetched ${docs.length} documents (pages)`);
+    // Crawl the website (reduced for Vercel timeout)
+    const docs = await crawlWebsite(
+      validUrl.toString(),
+      1,  // maxDepth: only 1 level deep
+      15  // maxPages: limit to 15 pages
+    );
 
     if (!docs.length) {
       return new Response(
         JSON.stringify({
           status: "error",
-          message: "No content found on this site or pages are JavaScript-only.",
+          message: "No content found on this website.",
         }),
         { headers: { "Content-Type": "application/json" }, status: 400 }
       );
     }
 
-    // Split each page into smaller chunks
+    console.log(`Successfully crawled ${docs.length} pages`);
+
+    // Split into chunks
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
       chunkOverlap: 200,
@@ -84,18 +193,26 @@ export async function POST(req) {
 
     console.log("Storing in Qdrant...");
 
-    await QdrantVectorStore.fromDocuments(splitDocs, embeddings, {
-      url: process.env.QDRANT_URL,
-      apiKey: process.env.QDRANT_API_KEY,
-      collectionName: "url-store",
-    });
+    // Process in batches to avoid memory issues
+    const BATCH_SIZE = 25;
+    for (let i = 0; i < splitDocs.length; i += BATCH_SIZE) {
+      const batch = splitDocs.slice(i, i + BATCH_SIZE);
+      console.log(`Processing batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(splitDocs.length / BATCH_SIZE)}`);
+      
+      await QdrantVectorStore.fromDocuments(batch, embeddings, {
+        url: process.env.QDRANT_URL,
+        apiKey: process.env.QDRANT_API_KEY,
+        collectionName: "url-store",
+      });
+    }
 
     console.log("Indexing completed successfully!");
 
     return new Response(
       JSON.stringify({
         status: "success",
-        message: "URL and internal pages indexed successfully!",
+        message: "Website indexed successfully!",
+        pagesProcessed: docs.length,
         documentsProcessed: splitDocs.length,
       }),
       { headers: { "Content-Type": "application/json" } }
