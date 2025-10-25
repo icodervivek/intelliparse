@@ -1,34 +1,42 @@
-# Intelliparse – Smart PDF Analyzer
+# Intelliparse – Smart PDF Analyzer & RAG Chat
 
-**Intelliparse** is an AI-powered web application that allows users to upload PDF documents and instantly get:
+**Intelliparse** is an AI-powered web application that allows users to upload PDF documents, extract knowledge, and interact with AI in a **RAG (Retrieval-Augmented Generation)** chat interface.  
 
-- **Concise summaries** of the content  
-- **FAQs with answers** generated from the document  
-- **Interactive document exploration** for fast comprehension  
+It supports:  
+- **Authentication via Clerk (Google login)**  
+- **Vector storage and retrieval** using Qdrant  
+- **Context-aware AI chat** leveraging uploaded PDFs, text, or URLs  
 
-This tool is perfect for students, professionals, and anyone who needs to quickly understand long documents.
+Perfect for students, professionals, and anyone who wants **fast, context-aware insights** from documents.
 
 ---
 
 ## 🚀 Features
 
-- Upload any PDF and get a **smart summary**  
-- Generate **FAQs** directly from your document  
-- Interactive **accordion-style FAQ section**  
-- Clean, modern **UI with gradients and animations**  
-- Fully **responsive** design  
-- Powered by **AI embeddings and generative models**  
+- Upload PDFs, text, or URLs and generate **knowledge embeddings**  
+- Generate **smart summaries** and **FAQs** from documents  
+- **RAG chat interface** to ask questions based on uploaded sources  
+- **Vector storage with Qdrant** for efficient retrieval  
+- **Clerk authentication** with Google SSO  
+- Interactive **FAQ / Chat UI** with code & link highlighting  
+- Modern **UI with animations** and responsive design  
 
 ---
 
 ## 📸 Screenshots
 
 **Home / Upload Page**  
-![Home Page](image-4.png)
-![Upload Page](image-3.png)
+![Home Page](image-1.png)  
+![Home Page](image-2.png)  
 
 **Summary & FAQs**  
-![Summary Screenshot](image-2.png)
+![Upload Page](image-3.png)  
+![Summary Screenshot](image-4.png)  
+
+**RAG Chat**  
+![RAG Screenshot](image-5.png)  
+![RAG Screenshot](image-6.png)  
+![RAG Screenshot](image-7.png)  
 
 ---
 
@@ -36,8 +44,10 @@ This tool is perfect for students, professionals, and anyone who needs to quickl
 
 - **Frontend:** Next.js, React, TypeScript, TailwindCSS, Framer Motion  
 - **Backend:** Next.js API routes, Axios  
-- **AI/Embeddings:** Google Generative AI, LangChain (optional)  
-- **Fonts:** Geist, Geist Mono (Google Fonts)  
+- **Authentication:** Clerk (Google SSO)  
+- **Vector DB:** Qdrant for storing and retrieving embeddings  
+- **AI / Embeddings:** OpenAI, Google Generative AI, LangChain  
+- **Syntax Highlighting:** Highlight.js  
 
 ---
 
@@ -58,10 +68,18 @@ npm install
 yarn install
 ```
 
-3. **Create a `.env` file** in the root and add your API keys:
+3. **Create a `.env` file** in the root:
 
 ```env
 GOOGLE_API_KEY=your_google_generative_ai_key
+QDRANT_URL=your_qdrant_host
+QDRANT_API_KEY=your_qdrant_api_key
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=clerk_publishable_key
+CLERK_SECRET_KEY=your_secret_key
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/
 ```
 
 4. **Run the development server:**
@@ -72,23 +90,38 @@ npm run dev
 yarn dev
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000) to view in your browser.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
 ## 💡 Usage
 
-1. Go to the **home page**.  
-2. Click **Select PDF file** and upload your document.  
-3. Click **Upload** to generate **summary and FAQs**.  
-4. Expand FAQ items to see the answers.
+### Authentication
+- Sign in using **Google via Clerk**.  
+- Only authenticated users can upload documents or chat in the RAG feature.  
+
+### Upload & Summarize PDF
+1. Go to **Home / Summarise PDF**.  
+2. Click **Select PDF** and upload your source.  
+3. Click **Upload** to generate summaries, and FAQs.  
+
+### RAG Chat
+1. Navigate to the **Home / Try Our RAG**.  
+2. Click on the **attachment icon** and upload PDFs, URLs or text from your source.  
+2. Ask AI questions — it retrieves relevant context from uploaded PDFs, text, or URLs using **Qdrant embeddings**.  
+3. Answers include **references to the source documents**.  
+
+### Managing Contexts
+- Clear uploaded sources and chat history using the **Clear Chat** button.  
+- Vector embeddings are stored in **Qdrant** for faster retrieval.
 
 ---
 
-
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.  
+Contributions are welcome!  
+- Open an issue to suggest features or report bugs.  
+- Submit a pull request to add improvements.  
 
 ---
 
