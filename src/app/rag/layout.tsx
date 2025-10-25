@@ -12,7 +12,7 @@ interface RootLayoutProps {
 export const metadata = {
   title: "RAG - Intelliparse",
   description:
-    "Upload PDFs and instantly get summaries, FAQs, and AI-powered insights.",
+    "RAG Chat with AI Assistant is an interactive AI chat interface that lets users upload PDFs, text, or URLs as context. It provides intelligent, context-aware responses, supports code and link highlighting, and saves chat history and sources locally for a seamless experience.",
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
