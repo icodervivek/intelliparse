@@ -26,7 +26,6 @@ const RAG = () => {
   const [textInput, setTextInput] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const STORAGE_KEY = "intelliparse_chat_history";
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([
     {
       sender: "ai",
@@ -50,42 +49,7 @@ const RAG = () => {
     });
   }, [messages]);
 
-  // Load chat history from localStorage on mount
-  useEffect(() => {
-    try {
-      const savedMessages = localStorage.getItem(STORAGE_KEY);
-      if (savedMessages) {
-        const parsed = JSON.parse(savedMessages);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(parsed);
-        }
-      }
-    } catch (error) {
-      console.error("Error loading chat history:", error);
-    }
-  }, []);
-
-  // Save messages to localStorage whenever they change
-  useEffect(() => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
-    } catch (error) {
-      console.error("Error saving chat history:", error);
-    }
-  }, [messages]);
-
-  // Clear chat history
-  const clearChatHistory = () => {
-    if (window.confirm("Are you sure you want to clear all chat history?")) {
-      const initialMessage = {
-        sender: "ai",
-        text: "Hi there! Need help? Upload a PDF, paste your text, or share a URL via the attachment icon for the best results.",
-      };
-      setMessages([initialMessage]);
-      localStorage.removeItem(STORAGE_KEY);
-      toast.success("Chat history cleared!");
-    }
-  };
+ 
 
   // Utility to render messages with code highlighting
   const renderMessageContent = (text: string) => {
@@ -209,7 +173,6 @@ const RAG = () => {
             RAG Chat with AI Assistant
           </h1>
           <button
-            onClick={clearChatHistory}
             className="p-2 sm:p-3 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition flex items-center gap-2 text-sm"
             title="Clear chat history"
           >
