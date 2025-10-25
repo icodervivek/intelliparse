@@ -5,8 +5,7 @@
       "memory": 1024
     },
     "app/api/rag/upload-url/route.js": {
-      "maxDuration": 60,
-      "memory": 1024
+      "maxDuration": 30
     }
   },
   "rewrites": [

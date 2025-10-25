@@ -143,6 +143,7 @@ const RAG = () => {
   };
 
   // 🔗 Text/URL Submit
+  // 🔗 Text/URL Submit
   const handleSubmitSource = async (e: FormEvent) => {
     e.preventDefault();
     if (!textInput && !urlInput) {
@@ -151,6 +152,15 @@ const RAG = () => {
     }
 
     setLoading(true);
+
+    // Show different loading message for URL
+    if (showModal === "url") {
+      toast.info("Loading URL... This may take 10-30 seconds.", {
+        autoClose: false,
+        toastId: "url-loading",
+      });
+    }
+
     try {
       const formData = new FormData();
       let endpoint = "";
@@ -163,12 +173,38 @@ const RAG = () => {
         endpoint = "/api/rag/upload-url";
       }
 
-      await axios.post(endpoint, formData);
+      const response = await axios.post(endpoint, formData, {
+        timeout: showModal === "url" ? 35000 : 60000, // 35s for URL, 60s for text
+      });
+
+      // Dismiss loading toast
+      toast.dismiss("url-loading");
+
       toast.success(
-        `${showModal === "text" ? "Text" : "URL"} source uploaded successfully!`
+        response.data.message ||
+          `${
+            showModal === "text" ? "Text" : "URL"
+          } source uploaded successfully!`
       );
-    } catch {
-      toast.error("Upload failed. Try again.");
+    } catch (error) {
+      // Dismiss loading toast
+      toast.dismiss("url-loading");
+
+      console.error("Upload error:", error);
+      let errorMessage = "Upload failed. Try again.";
+
+      if (axios.isAxiosError(error)) {
+        if (error.code === "ECONNABORTED") {
+          errorMessage =
+            "Request timeout. The URL might be too slow or complex. Try a simpler page.";
+        } else if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      toast.error(errorMessage, { autoClose: 5000 });
     } finally {
       setTextInput("");
       setUrlInput("");
