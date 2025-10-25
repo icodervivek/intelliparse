@@ -3,6 +3,10 @@
     "app/api/rag/upload-pdf/route.js": {
       "maxDuration": 60,
       "memory": 1024
+    },
+    "app/api/rag/upload-url/route.js": {
+      "maxDuration": 60,
+      "memory": 1024
     }
   },
   "rewrites": [
