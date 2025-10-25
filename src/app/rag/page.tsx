@@ -49,8 +49,6 @@ const RAG = () => {
     });
   }, [messages]);
 
- 
-
   // Utility to render messages with code highlighting
   const renderMessageContent = (text: string) => {
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
@@ -78,38 +76,45 @@ const RAG = () => {
   };
 
   // 📄 PDF Upload
- const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-  if (e.target.files && e.target.files[0]) {
-    const selectedFile = e.target.files[0];
-    
-    // Validate file size (e.g., max 10MB)
-    if (selectedFile.size > 10 * 1024 * 1024) {
-      toast.error("File too large. Maximum size is 10MB.");
-      return;
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const selectedFile = e.target.files[0];
+
+      // Validate file size (e.g., max 10MB)
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        toast.error("File too large. Maximum size is 10MB.");
+        return;
+      }
+
+      setFile(selectedFile);
+      setShowAttachmentMenu(false);
+      setLoading(true);
+
+      try {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        const response = await axios.post("/api/rag/upload-pdf", formData, {
+          timeout: 60000, // 60 second timeout
+        });
+
+        toast.success(response.data.message || "PDF uploaded successfully!");
+      } catch (error) {
+        console.error("Upload error:", error);
+        let errorMessage = "Upload failed. Try again.";
+
+        if (axios.isAxiosError(error) && error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+
+        toast.error(errorMessage);
+      } finally {
+        setLoading(false);
+      }
     }
-    
-    setFile(selectedFile);
-    setShowAttachmentMenu(false);
-    setLoading(true);
-    
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      
-      const response = await axios.post("/api/rag/upload-pdf", formData, {
-        timeout: 60000, // 60 second timeout
-      });
-      
-      toast.success(response.data.message || "PDF uploaded successfully!");
-    } catch (error) {
-      console.error("Upload error:", error);
-      const errorMessage = error.response?.data?.message || "Upload failed. Try again.";
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }
-};
+  };
 
   // 🔗 Text/URL Submit
   const handleSubmitSource = async (e: FormEvent) => {
