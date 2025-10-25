@@ -24,7 +24,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Intelliparse – Smart Document Analyzer",
   description:
-    "Upload PDFs and instantly get summaries, FAQs, and AI-powered insights.",
+    "Intelliparse is an AI-powered platform to upload PDFs, extract key insights, generate summaries and FAQs, and interact with your documents through an intelligent RAG-powered chat interface. Perfect for students, researchers, and professionals seeking fast document comprehension.",
 };
 
 export default function RootLayout({
