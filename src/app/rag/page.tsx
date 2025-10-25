@@ -76,13 +76,21 @@ const RAG = () => {
   };
 
   // 📄 PDF Upload
+  // 📄 PDF Upload with 5MB limit
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
 
-      // Validate file size (e.g., max 10MB)
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        toast.error("File too large. Maximum size is 10MB.");
+      // Validate file size (max 5MB for deployment platforms)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (selectedFile.size > maxSize) {
+        const fileSizeMB = (selectedFile.size / (1024 * 1024)).toFixed(2);
+        toast.error(
+          `File too large (${fileSizeMB}MB). Maximum size is 5MB. Please compress your PDF or split it into smaller files.`,
+          { autoClose: 5000 }
+        );
+        // Reset the file input
+        e.target.value = "";
         return;
       }
 
@@ -96,22 +104,40 @@ const RAG = () => {
 
         const response = await axios.post("/api/rag/upload-pdf", formData, {
           timeout: 60000, // 60 second timeout
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         });
 
         toast.success(response.data.message || "PDF uploaded successfully!");
       } catch (error) {
         console.error("Upload error:", error);
-        let errorMessage = "Upload failed. Try again.";
+        let errorMessage = "Upload failed. Please try again.";
 
-        if (axios.isAxiosError(error) && error.response?.data?.message) {
-          errorMessage = error.response.data.message;
+        if (axios.isAxiosError(error)) {
+          if (
+            error.response?.status === 413 ||
+            error.response?.status === 403
+          ) {
+            errorMessage =
+              "File size exceeds server limit (5MB). Please use a smaller PDF.";
+          } else if (error.response?.status === 504) {
+            errorMessage =
+              "Upload timeout. The file might be too large or connection is slow.";
+          } else if (error.response?.data?.message) {
+            errorMessage = error.response.data.message;
+          } else if (error.code === "ECONNABORTED") {
+            errorMessage = "Upload timeout. Please try with a smaller file.";
+          }
         } else if (error instanceof Error) {
           errorMessage = error.message;
         }
 
-        toast.error(errorMessage);
+        toast.error(errorMessage, { autoClose: 5000 });
       } finally {
         setLoading(false);
+        // Reset file input for re-upload
+        e.target.value = "";
       }
     }
   };
