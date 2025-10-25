@@ -45,7 +45,7 @@ export async function POST(req) {
     // Recursive loader to fetch main URL + internal pages
     const loader = new RecursiveUrlLoader(validUrl.toString(), {
       extractor: compiledConvert,
-      maxDepth: 8, // Adjust depth if needed
+      maxDepth: 5, // Adjust depth if needed
     });
 
     const docs = await loader.load();
