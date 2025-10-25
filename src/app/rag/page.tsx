@@ -16,6 +16,7 @@ import {
 } from "react-icons/fi";
 import { ToastContainer, toast } from "react-toastify";
 import hljs from "highlight.js";
+import { useUser } from "@clerk/nextjs";
 import "highlight.js/styles/github-dark.css";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,6 +27,11 @@ const RAG = () => {
   const [textInput, setTextInput] = useState("");
   const [urlInput, setUrlInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+  const STORAGE_KEY = user ? `rag_chat_${user.id}` : null;
+  const [sources, setSources] = useState<
+    { type: "pdf" | "text" | "url"; name: string; content?: string }[]
+  >([]);
   const [messages, setMessages] = useState<{ sender: string; text: string }[]>([
     {
       sender: "ai",
@@ -34,6 +40,38 @@ const RAG = () => {
   ]);
   const [userMessage, setUserMessage] = useState("");
   const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!STORAGE_KEY) return;
+
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.messages) setMessages(parsed.messages);
+      if (parsed.sources) setSources(parsed.sources);
+    }
+  }, [STORAGE_KEY]);
+
+  useEffect(() => {
+    if (!STORAGE_KEY) return;
+
+    const dataToStore = {
+      messages,
+      sources,
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToStore));
+  }, [messages, sources, STORAGE_KEY]);
+
+  const handleClearChat = () => {
+    setMessages([
+      {
+        sender: "ai",
+        text: "Hi there! Need help? Upload a PDF, paste your text, or share a URL via the attachment icon for the best results.",
+      },
+    ]);
+    setSources([]);
+    if (STORAGE_KEY) localStorage.removeItem(STORAGE_KEY);
+  };
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -95,6 +133,7 @@ const RAG = () => {
       }
 
       setFile(selectedFile);
+      setSources((prev) => [...prev, { type: "pdf", name: selectedFile.name }]);
       setShowAttachmentMenu(false);
       setLoading(true);
 
@@ -206,6 +245,22 @@ const RAG = () => {
 
       toast.error(errorMessage, { autoClose: 5000 });
     } finally {
+      if (showModal === "text" && textInput.trim() !== "") {
+        setSources((prev) => [
+          ...prev,
+          {
+            type: "text",
+            name: textInput.slice(0, 30) + (textInput.length > 30 ? "..." : ""),
+            content: textInput,
+          },
+        ]);
+      } else if (showModal === "url" && urlInput.trim() !== "") {
+        setSources((prev) => [
+          ...prev,
+          { type: "url", name: urlInput, content: urlInput },
+        ]);
+      }
+
       setTextInput("");
       setUrlInput("");
       setShowModal(null);
@@ -253,13 +308,14 @@ const RAG = () => {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
             RAG Chat with AI Assistant
           </h1>
-          {/* <button
-            className="p-2 sm:p-3 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition flex items-center gap-2 text-sm"
+          <button
+            className="p-2 sm:p-3 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition flex items-center gap-2 text-sm cursor-pointer"
             title="Clear chat history"
+            onClick={handleClearChat}
           >
             <FiTrash2 size={18} />
-            <span className="hidden sm:inline">Clear</span>
-          </button> */}
+            <span className="hidden sm:inline">Clear Chat</span>
+          </button>
         </div>
         {/* Chat Section */}
         <div
@@ -316,6 +372,44 @@ const RAG = () => {
               </div>
             </div>
           )}
+
+          <div className="mb-4 p-3 bg-white/10 rounded-2xl">
+            <h3 className="text-sm sm:text-base font-semibold mb-2">
+              Uploaded Contexts
+            </h3>
+            {sources.length === 0 ? (
+              <p className="text-gray-400 text-xs sm:text-sm">
+                No sources added yet.
+              </p>
+            ) : (
+              <ul className="flex flex-col gap-2 max-h-36 overflow-y-auto">
+                {sources.map((src, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between p-2 bg-white/10 rounded-lg text-xs sm:text-sm"
+                  >
+                    <div className="flex items-center gap-2">
+                      {src.type === "pdf" && <FiFileText />}
+                      {src.type === "text" && <FiFileText />}
+                      {src.type === "url" && <FiLink />}
+                      <span>{src.name}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSources((prev) =>
+                          prev.filter((_, index) => index !== i)
+                        );
+                        // Optional: Remove from backend too
+                      }}
+                      className="text-red-400 hover:text-red-500"
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
 
         {/* Chat Input + Attachments */}
