@@ -1,12 +1,12 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
-// Only protect specific routes, leave everything else public
+// Only protect /rag
 const isProtectedRoute = createRouteMatcher(['/rag(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  // Only protect /rag routes - everything else is public
+  // Pass the entire request, not just pathname
   if (isProtectedRoute(req)) {
-    await auth.protect();
+    await auth.protect()
   }
 })
 

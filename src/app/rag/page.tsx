@@ -253,13 +253,13 @@ const RAG = () => {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
             RAG Chat with AI Assistant
           </h1>
-          <button
+          {/* <button
             className="p-2 sm:p-3 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition flex items-center gap-2 text-sm"
             title="Clear chat history"
           >
             <FiTrash2 size={18} />
             <span className="hidden sm:inline">Clear</span>
-          </button>
+          </button> */}
         </div>
         {/* Chat Section */}
         <div

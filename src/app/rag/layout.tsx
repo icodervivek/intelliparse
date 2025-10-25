@@ -3,16 +3,7 @@ import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/nextjs";
 
 interface RootLayoutProps {
   children: ReactNode;
@@ -20,7 +11,8 @@ interface RootLayoutProps {
 
 export const metadata = {
   title: "RAG - Intelliparse",
-  description: "Upload PDFs and instantly get summaries, FAQs, and AI-powered insights.",
+  description:
+    "Upload PDFs and instantly get summaries, FAQs, and AI-powered insights.",
 };
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -36,16 +28,22 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`antialiased`}>
         <div className="font-sans min-h-screen flex flex-col bg-[#201f1f] text-white">
           {/* Navbar fixed */}
-          <Navbar />
+          <SignedIn>
+            <Navbar />
 
-          {/* Main content grows */}
-          <main className="flex-1 pt-16">{children}</main>
+            {/* Main content grows */}
+            <main className="flex-1 pt-16">{children}</main>
 
-          {/* Footer stays at bottom */}
-          <Footer />
+            {/* Footer stays at bottom */}
+            <Footer />
+          </SignedIn>
+
+          <SignedOut>
+            <RedirectToSignIn />
+          </SignedOut>
         </div>
       </body>
     </html>
