@@ -22,7 +22,8 @@ export default function SignUpPage() {
         transition={{ duration: 0.8 }}
         className="max-w-4xl mx-auto text-center flex  justify-center"
       >
-        <ClerkSignIn afterSignInUrl="/" afterSignUpUrl="/"  />
+        <ClerkSignIn
+        />
       </motion.div>
     </section>
   );

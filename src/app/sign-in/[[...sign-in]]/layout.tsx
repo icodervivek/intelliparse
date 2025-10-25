@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import Head from "next/head";
 import { Geist, Geist_Mono } from "next/font/google";
-import Navbar from "../components/navbar";
-import Footer from "../components/footer";
+import Navbar from "../../components/navbar";
+import Footer from "../../components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +19,7 @@ interface RootLayoutProps {
 }
 
 export const metadata = {
-  title: "Sign Up - Intelliparse",
+  title: "Sign In - Intelliparse",
   description: "Upload PDFs and instantly get summaries, FAQs, and AI-powered insights.",
 };
 

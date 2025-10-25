@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
