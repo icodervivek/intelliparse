@@ -63,9 +63,9 @@ cd intelliparse
 2. **Install dependencies:**
 
 ```bash
-npm install
+npm install --force
 # or
-yarn install
+yarn install --force
 ```
 
 3. **Create a `.env` file** in the root:
