@@ -6,8 +6,8 @@ import path from "path";
 import "dotenv/config";
 
 const client = new OpenAI({
-  apiKey: process.env.GOOGLE_API_KEY,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  apiKey: process.env.GROQ_API_KEY,
+  baseURL: "https://api.groq.com/openai/v1",
 });
 
 // 🧠 Define all 4 System Prompts (UPDATED to allow code blocks)
@@ -105,12 +105,12 @@ export async function POST(req) {
     if (!userMessage) {
       return NextResponse.json(
         { error: "No message provided" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     const userModifiedQuery = await client.chat.completions.create({
-      model: "gemini-2.0-flash",
+      model: "openai/gpt-oss-120b",
       messages: [
         {
           role: "system",
@@ -138,7 +138,7 @@ Your task is to rewrite the user's query for semantic search, ensuring that it:
     // Initialize embedding model
     const embeddings = new GoogleGenerativeAIEmbeddings({
       apiKey: process.env.GOOGLE_API_KEY,
-      model: "text-embedding-004",
+      model: "text-embedding-001",
     });
 
     const collections = ["pdf-store", "url-store", "text-store"];
@@ -151,7 +151,7 @@ Your task is to rewrite the user's query for semantic search, ensuring that it:
           {
             url: process.env.QDRANT_URL,
             collectionName,
-          }
+          },
         );
 
         const retriever = vectorStore.asRetriever({ k: 5 });
@@ -184,7 +184,7 @@ Your task is to rewrite the user's query for semantic search, ensuring that it:
             const metaLine = `Text Source: ${textSource}`;
             return `(Text - ${textSource})\n${metaLine}\n${chunk.pageContent}`;
           }
-        })
+        }),
       )
       .join("\n\n---\n\n");
 
@@ -240,7 +240,7 @@ For inline code, use single backticks: \`variableName\`
 
     // Generate grounded answer
     const response = await client.chat.completions.create({
-      model: "gemini-2.0-flash",
+      model: "openai/gpt-oss-120b",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: refinedQuery },
@@ -253,11 +253,11 @@ For inline code, use single backticks: \`variableName\`
 
     // FIXED: Only clean up markdown links, preserve code blocks and other formatting
     reply = reply.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, "$2");
-    
+
     // Remove bold/italic markers but preserve backticks for code
     reply = reply.replace(/\*\*([^*]+)\*\*/g, "$1"); // bold
     reply = reply.replace(/\*([^*]+)\*/g, "$1"); // italic
-    
+
     // Clean up extra whitespace but preserve code block indentation
     reply = reply.replace(/[ ]{2,}/g, " ");
 
@@ -266,7 +266,7 @@ For inline code, use single backticks: \`variableName\`
     console.error("Error in RAG Chat Route:", err);
     return NextResponse.json(
       { reply: "Error processing your message. Please try again later." },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

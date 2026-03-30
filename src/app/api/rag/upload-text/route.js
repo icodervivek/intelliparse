@@ -25,7 +25,7 @@ export async function POST(req) {
     // Initialize embeddings model
     const embeddings = new GoogleGenerativeAIEmbeddings({
       apiKey: process.env.GOOGLE_API_KEY,
-      model: "text-embedding-004",
+      model: "text-embedding-001",
     });
 
     // Store embedded text into Qdrant vector database

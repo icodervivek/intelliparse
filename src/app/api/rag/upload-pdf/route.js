@@ -1,5 +1,4 @@
 export const runtime = "nodejs";
-import "dotenv/config";
 import { promises as fs } from "fs";
 import path from "path";
 import os from "os";
@@ -9,7 +8,7 @@ import { GoogleGenerativeAIEmbeddings } from "@langchain/google-genai";
 
 export async function POST(req) {
   let filePath = null;
-  
+
   try {
     // Parse form data (multipart/form-data)
     const formData = await req.formData();
@@ -18,29 +17,32 @@ export async function POST(req) {
     if (!file) {
       return new Response(
         JSON.stringify({ status: "error", message: "No PDF file uploaded" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
     // Validate file type
-    if (!file.name.toLowerCase().endsWith('.pdf')) {
+    if (!file.name.toLowerCase().endsWith(".pdf")) {
       return new Response(
-        JSON.stringify({ status: "error", message: "Only PDF files are allowed" }),
-        { status: 400, headers: { "Content-Type": "application/json" } }
+        JSON.stringify({
+          status: "error",
+          message: "Only PDF files are allowed",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
       );
     }
 
     // Save uploaded PDF to /tmp directory (works in serverless environments)
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    
+
     // Use OS temp directory or /tmp for serverless
     const tempDir = process.env.VERCEL ? "/tmp" : os.tmpdir();
-    
+
     // Generate unique filename to avoid conflicts
     const timestamp = Date.now();
     const randomStr = Math.random().toString(36).substring(7);
-    const safeFileName = `${timestamp}-${randomStr}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
+    const safeFileName = `${timestamp}-${randomStr}-${file.name.replace(/[^a-zA-Z0-9.-]/g, "_")}`;
     filePath = path.join(tempDir, safeFileName);
 
     await fs.writeFile(filePath, buffer);
@@ -56,7 +58,8 @@ export async function POST(req) {
     // Initialize embeddings
     const embeddings = new GoogleGenerativeAIEmbeddings({
       apiKey: process.env.GOOGLE_API_KEY,
-      model: "text-embedding-004",
+      model: "text-embedding-001",
+      apiVersion: "v1"
     });
 
     // Validate Qdrant connection
@@ -69,6 +72,9 @@ export async function POST(req) {
       url: process.env.QDRANT_URL,
       apiKey: process.env.QDRANT_API_KEY, // Add if you're using Qdrant Cloud
       collectionName: "pdf-store",
+      clientOptions: {
+        checkCompatibility: false, // ✅ fixes version mismatch warning
+      },
     });
 
     return new Response(
@@ -77,7 +83,7 @@ export async function POST(req) {
         message: "PDF file indexed successfully!",
         documentsProcessed: docs.length,
       }),
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json" } },
     );
   } catch (error) {
     console.error("UploadPDF Error:", error);
@@ -86,7 +92,7 @@ export async function POST(req) {
         status: "error",
         message: error.message || "Failed to process PDF",
       }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   } finally {
     // Clean up: Delete temp file after processing (success or failure)

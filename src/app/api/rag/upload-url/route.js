@@ -188,7 +188,7 @@ export async function POST(req) {
     // Initialize embeddings
     const embeddings = new GoogleGenerativeAIEmbeddings({
       apiKey: process.env.GOOGLE_API_KEY,
-      model: "text-embedding-004",
+      model: "text-embedding-001",
     });
 
     console.log("Storing in Qdrant...");
